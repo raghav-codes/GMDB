@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -101,5 +102,34 @@ public class GMDBTestIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Mystic River"))
                 .andExpect(jsonPath("$.starRating").value(0));
+    }
+
+    @Test
+    public void updateStarRatingOfMovieReturnsUpdatedRating() throws Exception {
+        MoviesDto movie1 = MoviesDto.builder().title("Mystic River").build();
+
+        mockMvc.perform(post("/movies")
+                .content(objectMapper.writeValueAsString(movie1))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get(String.format("/movies/%s",movie1.getTitle())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Mystic River"))
+                .andExpect(jsonPath("$.starRating").value(0));
+
+        movie1.setStarRating(5);
+
+        mockMvc.perform(put(String.format("/movies/%s",movie1.getTitle()))
+                .content(objectMapper.writeValueAsString(movie1))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isAccepted());
+
+        mockMvc.perform(get(String.format("/movies/%s",movie1.getTitle())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Mystic River"))
+                .andExpect(jsonPath("$.starRating").value(5))
+                .andExpect(jsonPath("$.allStarRatings.length()").value(1));
+
     }
 }
