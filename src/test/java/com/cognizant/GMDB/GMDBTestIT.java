@@ -85,9 +85,5 @@ public class GMDBTestIT {
 
         mockMvc.perform(get(String.format("/movies/%s","The big short")))
                 .andExpect(status().isNotFound());
-
-
     }
-
-
 }

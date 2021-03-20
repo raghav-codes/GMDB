@@ -11,4 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MoviesDto {
     String title;
+    String director;
+    String actor;
+    String releaseYear;
+    String description;
+    Integer starRating;
 }
