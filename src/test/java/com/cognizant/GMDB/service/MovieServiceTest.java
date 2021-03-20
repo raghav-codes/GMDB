@@ -9,7 +9,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.verify;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class MovieServiceTest {
@@ -29,5 +32,25 @@ public class MovieServiceTest {
         verify(movieRepository).save(
                 MovieEntity.builder().title("HI").build()
         );
+    }
+
+    @Test
+    public void findAllMovies(){
+            MoviesDto movie = MoviesDto.builder()
+                    .title("HI")
+                    .build();
+            MovieEntity moviesList = MovieEntity.builder().title("HI").build();
+
+
+            when(movieRepository.findAll()).thenReturn(List.of(moviesList));
+
+            List<MoviesDto> resultSet = movieService.getMovies();
+
+            assertThat(resultSet).isEqualTo(List.of(movie));
+
+            verify(movieRepository).findAll();
+            verifyNoMoreInteractions(movieRepository);
+
+
     }
 }

@@ -6,6 +6,9 @@ import com.cognizant.GMDB.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class MovieService {
 
@@ -26,5 +29,17 @@ public class MovieService {
                 .build();
 
         movieRepository.save(movieEntity);
+    }
+
+    public List<MoviesDto> getMovies() {
+     List<MovieEntity> moviesList = movieRepository.findAll();
+     List<MoviesDto> moviesDtoList = new ArrayList<>();
+
+     for ( MovieEntity movie : moviesList){
+        MoviesDto result = MoviesDto.builder().title(movie.getTitle()).director(movie.getDirector()).description(movie.getDescription()).actor(movie.getActor()).build();
+         moviesDtoList.add(result);
+     }
+
+     return moviesDtoList;
     }
 }
