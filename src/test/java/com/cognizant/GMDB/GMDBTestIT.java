@@ -130,6 +130,5 @@ public class GMDBTestIT {
                 .andExpect(jsonPath("$.title").value("Mystic River"))
                 .andExpect(jsonPath("$.starRating").value(5))
                 .andExpect(jsonPath("$.allStarRatings.length()").value(1));
-
     }
 }
