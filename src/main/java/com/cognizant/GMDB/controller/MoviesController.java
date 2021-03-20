@@ -4,6 +4,7 @@ import com.cognizant.GMDB.model.MoviesDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,11 @@ public class MoviesController {
     @GetMapping("/{title}")
     public MoviesDto getMoviesByTitle(@PathVariable String title){
 
-        return moviesRepository.stream().filter(movie -> movie.getTitle().equals(title)).collect(Collectors.toList()).get(0);
+        MoviesDto result = moviesRepository.stream().filter(movie -> movie.getTitle().equals(title)).findFirst().orElse(null);
+
+       if( result == null)
+           throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Movies Not Found");
+       return result;
     }
 
 }
