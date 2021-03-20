@@ -1,6 +1,7 @@
 package com.cognizant.GMDB;
 
 import com.cognizant.GMDB.model.MoviesDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,5 +86,20 @@ public class GMDBTestIT {
 
         mockMvc.perform(get(String.format("/movies/%s","The big short")))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void newMovieDefaultStarRatingIsZero() throws Exception {
+        MoviesDto movie1 = MoviesDto.builder().title("Mystic River").build();
+
+        mockMvc.perform(post("/movies")
+                .content(objectMapper.writeValueAsString(movie1))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get(String.format("/movies/%s",movie1.getTitle())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Mystic River"))
+                .andExpect(jsonPath("$.starRating").value(0));
     }
 }

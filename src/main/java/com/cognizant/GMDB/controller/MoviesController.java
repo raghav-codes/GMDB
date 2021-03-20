@@ -26,6 +26,8 @@ public class MoviesController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addMovie(@RequestBody MoviesDto movie) {
+        movie.setStarRating(0);
+        movie.setAllStarRatings(List.of());
         moviesRepository.add(movie);
     }
 
