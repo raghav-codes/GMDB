@@ -58,5 +58,33 @@ public class GMDBTestIT {
                 .andExpect(jsonPath("[1].title").value("The Big Lebowski"));
     }
 
+    @Test
+    public void getMoviesByTitleTest() throws Exception {
+
+        MoviesDto movie1 = MoviesDto.builder().title("Mystic River").build();
+        MoviesDto movie2 = MoviesDto.builder().title("The BodyGuard").build();
+
+        mockMvc.perform(post("/movies")
+                .content(objectMapper.writeValueAsString(movie1))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/movies")
+                .content(objectMapper.writeValueAsString(movie2))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get(String.format("/movies/%s",movie1.getTitle())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Mystic River"));
+
+
+
+
+
+
+
+    }
+
 
 }
