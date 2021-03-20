@@ -34,6 +34,8 @@ public class GMDBTestIT {
     @Test
     public void addMovieTest() throws Exception {
         MoviesDto movie = MoviesDto.builder().title("Citizen Kane").build();
+        MoviesDto movie2 = MoviesDto.builder().title("The Big Lebowski").build();
+
         mockMvc.perform(post("/movies")
                 .content(objectMapper.writeValueAsString(movie))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -43,6 +45,17 @@ public class GMDBTestIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("[0].title").value("Citizen Kane"));
+
+        mockMvc.perform(post("/movies")
+                .content(objectMapper.writeValueAsString(movie2))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/movies"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("[0].title").value("Citizen Kane"))
+                .andExpect(jsonPath("[1].title").value("The Big Lebowski"));
     }
 
 
