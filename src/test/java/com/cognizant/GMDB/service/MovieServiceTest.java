@@ -51,6 +51,23 @@ public class MovieServiceTest {
             verify(movieRepository).findAll();
             verifyNoMoreInteractions(movieRepository);
 
-
     }
+/*    @Test
+        public void findMoviesByTitle(){
+        MoviesDto movie = MoviesDto.builder().title("HI").build();
+        MovieEntity moviesEntity = MovieEntity.builder().title("HI").build();
+
+        when(movieRepository.findOne(anyString())).thenReturn(moviesEntity);
+
+        MoviesDto resultSet = movieService.findByTitle("HI");
+
+        assertThat(resultSet).isEqualTo(movie);
+
+        verify(movieRepository).findOne();
+        verifyNoMoreInteractions(movieRepository);
+
+
+
+    }*/
+
 }
